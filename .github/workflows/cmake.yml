@@ -13,7 +13,8 @@ jobs:
 
   build-project:
   
-    runs-on: oueio/base:base
+    runs-on: ubuntu:latest
+    container: oueio/base:base
 
     steps:
       - uses: actions/checkout@v3
@@ -27,7 +28,8 @@ jobs:
   linters:
     needs: [ build-project ]
 
-    runs-on: oueio/base:base
+    runs-on: ubuntu:latest
+    container: oueio/base:base
 
     steps:
       - uses: actions/checkout@v3
@@ -41,7 +43,8 @@ jobs:
   tests:
     needs: [ build-project ]
 
-    runs-on: oueio/base:base
+    runs-on: ubuntu:latest
+    container: oueio/base:base
     
     steps:
       - uses: actions/checkout@v3
@@ -67,7 +70,8 @@ jobs:
   sanitisers:
     needs: [ build-project ]
 
-    runs-on: oueio/base:base
+    runs-on: ubuntu:latest
+    container: oueio/base:base
 
     steps:
       - uses: actions/checkout@v3
