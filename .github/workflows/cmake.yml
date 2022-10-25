@@ -13,7 +13,7 @@ jobs:
 
   build-project:
   
-    runs-on: ubuntu:latest
+    runs-on: ubuntu-latest
     container: oueio/base:base
 
     steps:
@@ -28,7 +28,7 @@ jobs:
   linters:
     needs: [ build-project ]
 
-    runs-on: ubuntu:latest
+    runs-on: ubuntu-latest
     container: oueio/base:base
 
     steps:
@@ -43,7 +43,7 @@ jobs:
   tests:
     needs: [ build-project ]
 
-    runs-on: ubuntu:latest
+    runs-on: ubuntu-latest
     container: oueio/base:base
     
     steps:
@@ -70,7 +70,7 @@ jobs:
   sanitisers:
     needs: [ build-project ]
 
-    runs-on: ubuntu:latest
+    runs-on: ubuntu-latest
     container: oueio/base:base
 
     steps:
