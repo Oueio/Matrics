@@ -13,8 +13,8 @@ file(GLOB SOURCES *.cpp)
 
 find_package(GTest REQUIRED)
 
-add_executable(${PROJECT_NAME} ${SOURCES})
-target_link_libraries(${PROJECT_NAME} GTest::gtest_main)
+add_executable(${PROJECT_NAME}_1 ${SOURCES})
+target_link_libraries(${PROJECT_NAME}_1 GTest::gtest_main)
 
 
 #include(FetchContent)
