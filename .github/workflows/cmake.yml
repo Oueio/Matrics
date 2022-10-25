@@ -67,11 +67,6 @@ jobs:
           name: my-artifact
           path: ${{ github.workflow }}/build
 
-      - name: Move to workspace
-        run: |
-          mkdir -p ${{ github.workspace }}/build
-          mv ${{ github.workflow }}/build/* ${{ github.workspace }}/build
-
       - name: Test
         run: |
           cd ${{ github.workspace }}/build/Tests/
