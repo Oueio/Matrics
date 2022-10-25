@@ -54,19 +54,18 @@ jobs:
     
     steps:
       - uses: actions/checkout@v3
-      
-      - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}#
-
-      - name: Build
-        run: cmake --build ${{github.workspace}}/build
 
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
           name: my-artifact
           path: ${{ github.workflow }}/build
-
+          
+      - name: Build test
+        run: |
+          cmake -B ${{ github.workflow }}/build/Tests -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          cmake --build ${{ github.workflow }}/build/Tests  
+          
       - name: Test
         run: |
           cd ${{ github.workspace }}/build/Tests/
