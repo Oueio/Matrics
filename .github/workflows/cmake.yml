@@ -11,10 +11,17 @@ env:
 
 jobs:
 
+  build-containter:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag base
 
   build-project:
-    runs-on: ubuntu-latest
-    container: Dockerfile
+    runs-on: base
 
     steps:
       - uses: actions/checkout@v3
@@ -28,8 +35,7 @@ jobs:
   linters:
     needs: [ build-project ]
 
-    runs-on: ubuntu-latest
-    container: Dockerfile
+    runs-on: base
 
     steps:
       - uses: actions/checkout@v3
@@ -43,8 +49,7 @@ jobs:
   tests:
     needs: [ build-project ]
 
-    runs-on: ubuntu-latest
-    container: Dockerfile
+    runs-on: base
 
     steps:
       - uses: actions/checkout@v3
@@ -70,8 +75,7 @@ jobs:
   sanitisers:
     needs: [ build-project ]
 
-    runs-on: ubuntu-latest
-    container: Dockerfile
+    runs-on: base
 
     steps:
       - uses: actions/checkout@v3
