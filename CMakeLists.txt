@@ -5,13 +5,18 @@ option(BUILD_FOR_TEST "Build for test" OFF)
 
 set(CMAKE_CXX_STANDARD 20)
 
+include_directories("include/")
 
+set(HEADERS include/.)
 
-add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} 
-    PRIVATE
-    include/headers/
-    )
+set(SRCS
+        src/Matrix.cpp
+        src/VectorDouble.cpp
+        )
+
+add_executable(${PROJECT_NAME} main.cpp
+        ${SRCS}
+        )
 
 if (BUILD_FOR_TEST)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -coverage -lgcov" )
