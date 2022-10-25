@@ -61,10 +61,10 @@ jobs:
           name: my-artifact
           path: ${{ github.workflow }}/build
           
-      - name: Build test
+      - name: Move to workspace
         run: |
-          cmake -B ${{ github.workflow }}/build/Tests -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-          cmake --build ${{ github.workflow }}/build/Tests  
+          mkdir -p ${{ github.workspace }}/build
+          mv ${{ github.workflow }}/build/* ${{ github.workspace }}/build
           
       - name: Test
         run: |
