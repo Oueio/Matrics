@@ -23,6 +23,8 @@ jobs:
       run: docker push base
 
   build-project:
+    needs: [ build-containter ]
+  
     runs-on: ubuntu-latest
     container: base
 
