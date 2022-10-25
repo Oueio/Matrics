@@ -24,6 +24,12 @@ jobs:
 
       - name: Build
         run: cmake --build ${{ github.workflow }}/build
+        
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: ${{ github.workflow }}/build/**/*
 
   linters:
     needs: [ build-project ]
@@ -54,12 +60,12 @@ jobs:
         with:
           name: my-artifact
           path: ${{ github.workflow }}/build
-
+          
       - name: Move to workspace
         run: |
           mkdir -p ${{ github.workspace }}/build
           mv ${{ github.workflow }}/build/* ${{ github.workspace }}/build
-
+          
       - name: Test
         run: |
           cd ${{ github.workspace }}/build/Tests/

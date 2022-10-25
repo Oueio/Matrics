@@ -1,3 +1,5 @@
+// Copyright 2022 OUEIO
+
 #include <gtest/gtest.h>
 
 int main() {
