@@ -7,8 +7,6 @@ set(CMAKE_CXX_STANDARD 20)
 
 include_directories("include/")
 
-set(HEADERS include/.)
-
 set(SRCS
         src/Matrix.cpp
         src/VectorDouble.cpp

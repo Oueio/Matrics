@@ -8,10 +8,19 @@ if (BUILD_FOR_TEST)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -coverage -lgcov" )
 endif ()
 
+include_directories("..include/")
 
-file(GLOB SOURCES *.cpp)
+set(SRCS
+        ../src/Matrix.cpp
+        ../src/VectorDouble.cpp
+        )
+
+file(GLOB SOURCES
+        test.cpp
+        ${SRCS})
 
 find_package(GTest REQUIRED)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
+
 target_link_libraries(${PROJECT_NAME} GTest::gtest_main)

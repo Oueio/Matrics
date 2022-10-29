@@ -8,12 +8,18 @@ Matrix::Matrix() {
 
 Matrix::Matrix(VectorDouble *vectors, size_t r) {
     cols = vectors[0].length();
-    for (int i = 1; i < r; ++i) if (vectors[i].length() != cols) exit(WRONG_DIMENSION_MATRIX);
+    int i, j;
+    for (i = 1; i < r; ++i) {
+        if (vectors[i].length() != cols) {
+            throw std::length_error("Not same size for all vectors");
+        }
+    }
     rows = r;
     arr = new VectorDouble(rows * cols);
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
-            arr->push_back(vectors[i][j]);
+    size_t x = 0;
+    for (i = 0; i < rows; ++i) {
+        for (j = 0; j < cols; ++j) {
+            (*arr)[x++] = vectors[i][j];
         }
     }
 }
@@ -25,76 +31,100 @@ std::istream &operator>>(std::istream &in, Matrix &obj) {
     return in;
 }
 
-double &Matrix::operator()(int r, int c) const {
-    if (r < 0 or r >= rows or c < 0 or c >= cols) {
-        exit(WRONG_INDEX);
+double &Matrix::operator()(const size_t r, const size_t c) const {
+    if (r >= rows or c >= cols) {
+        throw std::out_of_range("Wrong index");
     }
     return (*arr)[(int) (r * cols) + c];
 }
 
 std::ostream &operator<<(std::ostream &out, const Matrix &obj) {
-    for (int i = 0; i < obj.rows; ++i) {
-        for (int j = 0; j < obj.cols; ++j) {
+    int i, j;
+    for (i = 0; i < obj.rows; ++i) {
+        for (j = 0; j < obj.cols; ++j) {
             out << obj(i, j) << ' ';
         }
-        if (i != obj.rows - 1) out << std::endl;
+        if (i != obj.rows - 1) {
+            out << std::endl;
+        }
     }
     return out;
 }
 
-Matrix::~Matrix() {
-    delete arr;
-}
-
 VectorDouble Matrix::get_row(int r) const {
     VectorDouble obj(cols);
-    for (int i = 0; i < cols; ++i) obj.push_back((*this)(r, i));
+    int i;
+    for (i = 0; i < cols; ++i) {
+        obj[i] = (*this)(r, i);
+    }
     return obj;
 }
 
 VectorDouble Matrix::get_col(int c) const {
     VectorDouble obj(rows);
-    for (int i = 0; i < rows; ++i) obj.push_back((*this)(i, c));
+    int i;
+    for (i = 0; i < rows; ++i) {
+        obj[i] = (*this)(i, c);
+    }
     return obj;
 }
 
 VectorDouble Matrix::get_side_diag() const {
-    if (rows != cols) exit(CANT_EXTRACT_DIAG);
+    if (rows != cols) {
+        throw std::bad_function_call();
+    }
     VectorDouble obj(rows);
-    for (int i = 0; i < rows; ++i) obj.push_back((*this)((int) (rows - i - 1), i));
+    int i;
+    for (i = 0; i < rows; ++i) {
+        obj[i] = (*this)(rows - i - 1, i);
+    }
     return obj;
 }
 
 VectorDouble Matrix::get_main_diag() const {
-    if (rows != cols) exit(CANT_EXTRACT_DIAG);
+    if (rows != cols) {
+        throw std::bad_function_call();
+    }
     VectorDouble obj(rows);
-    for (int i = 0; i < rows; ++i) obj.push_back((*this)(i, i));
+    int i;
+    for (i = 0; i < rows; ++i) {
+        obj[i] = (*this)(i, i);
+    }
     return obj;
 }
 
 Matrix &Matrix::operator+=(const Matrix &obj) {
-    if (rows != obj.rows or cols != obj.cols) exit(WRONG_DIMENSION_MATRIX);
+    if (rows != obj.rows or cols != obj.cols) {
+        throw std::length_error("Not same size");
+    }
     *arr += *obj.arr;
     return *this;
 }
 
 Matrix &Matrix::operator-=(const Matrix &obj) {
-    if (rows != obj.rows or cols != obj.cols) exit(WRONG_DIMENSION_MATRIX);
+    if (rows != obj.rows or cols != obj.cols) {
+        throw std::length_error("Not same size");
+    }
     *arr -= *obj.arr;
     return *this;
 }
 
 Matrix &Matrix::operator*=(const Matrix &obj) {
-    if (rows != obj.rows or cols != obj.cols) exit(WRONG_DIMENSION_MATRIX);
+    if (rows != obj.rows or cols != obj.cols) {
+        throw std::length_error("Not same size");
+    }
     *arr *= *obj.arr;
     return *this;
 }
 
 Matrix Matrix::operator+(const Matrix &obj) const {
-    if (rows != obj.rows or cols != obj.cols) exit(WRONG_DIMENSION_MATRIX);
+    if (rows != obj.rows or cols != obj.cols) {
+        throw std::length_error("Not same size");
+    }
     Matrix res(rows, cols);
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
+    int i, j;
+    for (i = 0; i < rows; ++i) {
+        for (j = 0; j < cols; ++j) {
             res(i, j) = (*this)(i, j) + obj(i, j);
         }
     }
@@ -102,25 +132,17 @@ Matrix Matrix::operator+(const Matrix &obj) const {
 }
 
 Matrix Matrix::operator-(const Matrix &obj) const {
-    if (rows != obj.rows or cols != obj.cols) exit(WRONG_DIMENSION_MATRIX);
+    if (rows != obj.rows or cols != obj.cols) {
+        throw std::length_error("Not same size");
+    }
     Matrix res(rows, cols);
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
+    int i, j;
+    for (i = 0; i < rows; ++i) {
+        for (j = 0; j < cols; ++j) {
             res(i, j) = (*this)(i, j) - obj(i, j);
         }
     }
     return res;
-}
-
-Matrix &Matrix::operator=(const Matrix &obj) {
-    if (this == &obj) return *this;
-    rows = obj.rows;
-    cols = obj.cols;
-    delete arr;
-    arr = new VectorDouble(rows * cols);
-    size_t size = rows * cols;
-    for (int i = 0; i < size; ++i) (*arr)[i] = (*obj.arr)[i];
-    return *this;
 }
 
 Matrix::Matrix(size_t r, size_t c) {
@@ -129,19 +151,21 @@ Matrix::Matrix(size_t r, size_t c) {
     cols = c;
 }
 
-Matrix &Matrix::operator*=(int num) {
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
+Matrix &Matrix::operator*=(double num) {
+    int i, j;
+    for (i = 0; i < rows; ++i) {
+        for (j = 0; j < cols; ++j) {
             (*this)(i, j) *= num;
         }
     }
     return *this;
 }
 
-Matrix Matrix::operator*(int num) const {
+Matrix Matrix::operator*(double num) const {
     Matrix res(rows, cols);
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
+    int i, j;
+    for (i = 0; i < rows; ++i) {
+        for (j = 0; j < cols; ++j) {
             res(i, j) = (*this)(i, j) * num;
         }
     }
@@ -149,12 +173,15 @@ Matrix Matrix::operator*(int num) const {
 }
 
 VectorDouble Matrix::operator*(const VectorDouble &obj) const {
-    if (cols != obj.length()) exit(WRONG_DIMENSION_VECTOR);
+    if (cols != obj.length()) {
+        throw std::length_error("Wrong dimensions for operator *");
+    }
     VectorDouble res;
     res = obj;
-    for (int i = 0; i < rows; ++i) {
+    int i, j;
+    for (i = 0; i < rows; ++i) {
         double r = 0;
-        for (int j = 0; j < cols; ++j) {
+        for (j = 0; j < cols; ++j) {
             r += (*this)(i, j) * obj[j];
         }
         res[i] = r;
@@ -163,12 +190,16 @@ VectorDouble Matrix::operator*(const VectorDouble &obj) const {
 }
 
 Matrix Matrix::operator*(const Matrix &obj) const {
-    if (cols != obj.rows) exit(WRONG_DIMENSION_MATRIX);
+    if (cols != obj.rows) {
+        throw std::length_error("Wrong dimensions for operator *");
+    }
     Matrix res(rows, obj.cols);
-    for (int k = 0; k < obj.cols; ++k) {
-        for (int i = 0; i < obj.rows; ++i) {
-            double r = 0;
-            for (int j = 0; j < cols; ++j) {
+    int i, j, k;
+    double r;
+    for (k = 0; k < obj.cols; ++k) {
+        for (i = 0; i < obj.rows; ++i) {
+            r = 0;
+            for (j = 0; j < cols; ++j) {
                 r += (*this)(i, j) * obj(j, k);
             }
             res(i, k) = r;
@@ -177,16 +208,19 @@ Matrix Matrix::operator*(const Matrix &obj) const {
     return res;
 }
 
-void Matrix::put_row(const VectorDouble &obj, int row, char c) const {
-    if (cols != obj.length()) exit(WRONG_DIMENSION_VECTOR);
+void Matrix::put_row(const VectorDouble &obj, int row, char c) {
+    if (cols != obj.length()) {
+        throw std::length_error("Not same size");
+    }
+    int i;
     switch (c) {
         case '+':
-            for (int i = 0; i < obj.length(); ++i) {
+            for (i = 0; i < obj.length(); ++i) {
                 (*this)(row, i) += obj[i];
             }
             break;
         case '-':
-            for (int i = 0; i < obj.length(); ++i) {
+            for (i = 0; i < obj.length(); ++i) {
                 (*this)(row, i) -= obj[i];
             }
         default:
@@ -194,16 +228,19 @@ void Matrix::put_row(const VectorDouble &obj, int row, char c) const {
     }
 }
 
-void Matrix::put_col(const VectorDouble &obj, int col, char c) const {
-    if (rows != obj.length()) exit(WRONG_DIMENSION_VECTOR);
+void Matrix::put_col(const VectorDouble &obj, int col, char c) {
+    if (rows != obj.length()) {
+        throw std::length_error("Not same size");
+    }
+    int i;
     switch (c) {
         case '+':
-            for (int i = 0; i < obj.length(); ++i) {
+            for (i = 0; i < obj.length(); ++i) {
                 (*this)(i, col) += obj[i];
             }
             break;
         case '-':
-            for (int i = 0; i < obj.length(); ++i) {
+            for (i = 0; i < obj.length(); ++i) {
                 (*this)(i, col) -= obj[i];
             }
         default:
@@ -212,32 +249,53 @@ void Matrix::put_col(const VectorDouble &obj, int col, char c) const {
 }
 
 double Matrix::determinant() {
-    if (cols != rows) exit(WRONG_DIMENSION_MATRIX);
-    if (rows == 2) return (*this)(0, 0) * (*this)(1, 1) - (*this)(0, 1) * (*this)(1, 0);
-    else {
+    if (cols != rows) {
+        throw std::length_error("Wrong dimensions");
+    }
+    if (rows == 2) {
+        return (*this)(0, 0) * (*this)(1, 1) - (*this)(0, 1) * (*this)(1, 0);
+    } else {
         double res = 0;
-        for (int i = 0; i < cols; ++i) {
-            if (i % 2 == 0) res += (*this)(0, i) * (this->minor(0, i).determinant());
-            else res += -(*this)(0, i) * (this->minor(0, i).determinant());
+        int i;
+        for (i = 0; i < cols; ++i) {
+            if (i % 2 == 0) {
+                res += (*this)(0, i) * (this->minor(0, i).determinant());
+            } else {
+                res -= (*this)(0, i) * (this->minor(0, i).determinant());
+            }
         }
         return res;
     }
 }
 
-Matrix Matrix::minor(int row, int col) {
-    if (rows != cols) exit(WRONG_DIMENSION_MATRIX);
-    if (rows - 1 == 0) return *this;
+Matrix Matrix::minor(const size_t row, const size_t col) {
+    if (rows != cols) {
+        throw std::length_error("Wrong dimensions");
+    }
+    if (rows - 1 == 0) {
+        return *this;
+    }
     Matrix res(rows - 1, cols - 1);
-    int r = 0;
-    int c;
-    for (int i = 0; i < rows; ++i) {
+    int r = 0, c, i, j;
+    for (i = 0; i < rows; ++i) {
         c = 0;
         if (i == row) continue;
-        for (int j = 0; j < cols; ++j) {
+        for (j = 0; j < cols; ++j) {
             if (j == col) continue;
             res(r, c++) = (*this)(i, j);
         }
         r++;
+    }
+    return res;
+}
+
+Matrix Matrix::trans() const {
+    Matrix res(cols, rows);
+    int i, j;
+    for (i = 0; i < rows; ++i) {
+        for (j = 0; j < cols; ++j) {
+            res(j, i) = (*this)(i, j);
+        }
     }
     return res;
 }
@@ -249,13 +307,48 @@ Matrix::Matrix(const Matrix &obj) {
     cols = obj.cols;
 }
 
-Matrix Matrix::trans() const {
-    Matrix res(cols, rows);
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
-            res(j, i) = (*this)(i, j);
-        }
+Matrix &Matrix::operator=(const Matrix &obj) {
+    if (&obj == this) {
+        return *this;
     }
-    return res;
+    rows = obj.rows;
+    cols = obj.cols;
+    arr = new VectorDouble(rows * cols);
+    *arr = *obj.arr;
+    return *this;
 }
 
+Matrix::~Matrix() {
+    delete arr;
+}
+
+Matrix::Matrix(double *p, size_t r, size_t c) {
+    rows = r;
+    cols = c;
+    arr = new VectorDouble(p, rows * cols);
+}
+
+bool Matrix::operator==(const Matrix &obj) {
+    if (rows == obj.rows and cols == obj.cols and *arr == *obj.arr) {
+        return true;
+    }
+    return false;
+}
+
+Matrix Matrix::reverse() {
+    int i, j;
+    Matrix res(rows, cols);
+    for (i = 0; i < rows; ++i) {
+        for (j = 0; j < cols; ++j) {
+            if ((i + j) % 2 == 0) {
+                res(i, j) = this->minor(i, j).determinant();
+            }
+            else {
+                res(i, j) = -this->minor(i, j).determinant();
+            }
+        }
+    }
+    res = res.trans();
+    res *= (1 / this->determinant());
+    return res;
+}

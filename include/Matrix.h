@@ -12,17 +12,19 @@ private:
 public:
     Matrix();
 
+    ~Matrix();
+
     Matrix(VectorDouble *, size_t);
 
     Matrix(size_t, size_t);
 
     Matrix(const Matrix &);
 
-    ~Matrix();
+    Matrix(double *, size_t, size_t);
 
     friend std::istream &operator>>(std::istream &, Matrix &);
 
-    double &operator()(int, int) const;
+    double &operator()(size_t, size_t) const;
 
     friend std::ostream &operator<<(std::ostream &, const Matrix &);
 
@@ -46,9 +48,9 @@ public:
 
     Matrix &operator=(const Matrix &);
 
-    Matrix &operator*=(int);
+    Matrix &operator*=(double);
 
-    Matrix operator*(int) const;
+    Matrix operator*(double) const;
 
     VectorDouble operator*(const VectorDouble &) const;
 
@@ -58,16 +60,19 @@ public:
 
     Matrix operator*(const Matrix &) const;
 
-    void put_row(const VectorDouble &obj, int row, char c) const;
+    void put_row(const VectorDouble &obj, int row, char c);
 
-    void put_col(const VectorDouble &obj, int col, char c) const;
+    void put_col(const VectorDouble &obj, int col, char c);
 
     double determinant();
 
-    Matrix minor(int, int);
+    Matrix minor(size_t, size_t);
 
-    Matrix trans() const;
+    [[nodiscard]] Matrix trans() const;
+
+    bool operator==(const Matrix &);
+
+    Matrix reverse();
 };
-
 
 #endif //MATRIX_H

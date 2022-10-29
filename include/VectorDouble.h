@@ -7,7 +7,6 @@ class VectorDouble {
 private:
     double *arr;
     size_t size;
-    size_t iterator;
 public:
     VectorDouble();
 
@@ -15,11 +14,11 @@ public:
 
     ~VectorDouble();
 
+    explicit VectorDouble(const double *, size_t);
+
     [[nodiscard]] size_t length() const;
 
-    int push_back(double);
-
-    double &operator[](int) const;
+    double &operator[](size_t) const;
 
     friend std::istream &operator>>(std::istream &, VectorDouble &);
 
@@ -38,6 +37,8 @@ public:
     VectorDouble &operator=(const VectorDouble &);
 
     friend std::ostream &operator<<(std::ostream &, const VectorDouble &);
+
+    bool operator==(const VectorDouble &);
 };
 
 #endif //VECTORDOUBLE_H
