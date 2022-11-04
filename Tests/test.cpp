@@ -4,6 +4,7 @@
 #include <Matrix.h>
 
 namespace FIRST {
+
     TEST(First, Access_to_vector_element) {
         double a[3] = {1, 2, 3};
         VectorDouble vec(a, 3);
@@ -14,7 +15,8 @@ namespace FIRST {
         double a[3] = {1, 2, 3};
         double b[3] = {1, 2, 3};
         double c[3] = {1, 2, 3};
-        VectorDouble p[3] = {VectorDouble(a, 3), VectorDouble(b, 3), VectorDouble(c, 3)};
+        VectorDouble p[3] =
+                {VectorDouble(a, 3), VectorDouble(b, 3), VectorDouble(c, 3)};
         Matrix obj(p, 3);
         EXPECT_EQ(obj(0, 0), 1);
     }
@@ -23,7 +25,8 @@ namespace FIRST {
         double a[3] = {1, 2, 3};
         double b[3] = {1, 2, 3};
         double c[3] = {1, 2, 3};
-        VectorDouble p[3] = {VectorDouble(a, 3), VectorDouble(b, 3), VectorDouble(c, 3)};
+        VectorDouble p[3] =
+                {VectorDouble(a, 3), VectorDouble(b, 3), VectorDouble(c, 3)};
         Matrix obj(p, 3);
         VectorDouble vec = obj.get_main_diag();
         EXPECT_TRUE(vec == p[0]);
@@ -33,7 +36,8 @@ namespace FIRST {
         double a[3] = {1, 2, 3};
         double b[3] = {1, 2, 3};
         double c[3] = {1, 2, 3};
-        VectorDouble p[3] = {VectorDouble(a, 3), VectorDouble(b, 3), VectorDouble(c, 3)};
+        VectorDouble p[3] =
+                {VectorDouble(a, 3), VectorDouble(b, 3), VectorDouble(c, 3)};
         Matrix obj(p, 3);
         VectorDouble vec = obj.get_side_diag();
         EXPECT_TRUE(vec == p[0]);
@@ -43,7 +47,8 @@ namespace FIRST {
         double a[3] = {1, 2, 3};
         double b[3] = {1, 2, 3};
         double c[3] = {1, 2, 3};
-        VectorDouble p[3] = {VectorDouble(a, 3), VectorDouble(b, 3), VectorDouble(c, 3)};
+        VectorDouble p[3] =
+                {VectorDouble(a, 3), VectorDouble(b, 3), VectorDouble(c, 3)};
         Matrix obj(p, 3);
         VectorDouble vec = obj.get_row(0);
         EXPECT_TRUE(vec == p[0]);
@@ -54,13 +59,14 @@ namespace FIRST {
         double b[3] = {1, 2, 3};
         double c[3] = {1, 2, 3};
         double d[3] = {2, 2, 2};
-        VectorDouble p[3] = {VectorDouble(a, 3), VectorDouble(b, 3), VectorDouble(c, 3)};
+        VectorDouble p[3] =
+                {VectorDouble(a, 3), VectorDouble(b, 3), VectorDouble(c, 3)};
         Matrix obj(p, 3);
         VectorDouble vec = obj.get_col(1);
         EXPECT_TRUE(vec == VectorDouble(d, 3));
     }
 
-}
+}   // namespace FIRST
 
 namespace SECOND {
     TEST(Second, Matrix_from_numbers) {
@@ -80,7 +86,8 @@ namespace SECOND {
         double a[3] = {1, 1, 1};
         double b[3] = {1, 1, 1};
         double c[3] = {1, 1, 1};
-        VectorDouble p[3] = {VectorDouble(a, 3), VectorDouble(b, 3), VectorDouble(c, 3)};
+        VectorDouble p[3] =
+                {VectorDouble(a, 3), VectorDouble(b, 3), VectorDouble(c, 3)};
         Matrix obj(p, 3);
         int i, j;
         for (i = 0; i < 3; ++i) {
@@ -99,7 +106,7 @@ namespace SECOND {
         }
     }
 
-}
+}   // namespace SECOND
 
 namespace THIRD {
     TEST(Third, Vector_plus_Vector) {
@@ -164,7 +171,7 @@ namespace THIRD {
         EXPECT_TRUE((obj1 - obj2) == Matrix(c, 3, 3));
     }
 
-}
+}   // namespace THIRD
 
 namespace FOURTH {
     TEST(Fourth, Matrix_multi_Number) {
@@ -203,7 +210,7 @@ namespace FOURTH {
         EXPECT_TRUE((obj1 * obj2) == Matrix(c, 3, 3));
     }
 
-}
+}   // namespace FOURTH
 
 namespace FIFTH {
     TEST(Fifth, Vector_plus_Number) {
@@ -269,7 +276,7 @@ namespace FIFTH {
         obj.put_col(vec, 0, '-');
         EXPECT_TRUE(obj == Matrix(c, 2, 2));
     }
-}
+}   // namespace FIFTH
 
 namespace SIXTH {
     TEST(Sixth, Trans) {
@@ -292,7 +299,7 @@ namespace SIXTH {
         EXPECT_TRUE(Matrix(a, 3, 3).reverse() == Matrix(b, 3, 3));
     }
 
-}
+}   // namespace SIXTH
 
 namespace SEVENTH {
     TEST(Seventh, Determinant) {
@@ -301,7 +308,7 @@ namespace SEVENTH {
                        5, -2, -3};
         EXPECT_EQ(Matrix(a, 3, 3).determinant(), -1);
     }
-}
+}   // namespace SEVENTH
 
 int main() {
     ::testing::InitGoogleTest();

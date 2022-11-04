@@ -3,7 +3,8 @@ project(HW1_1 CXX)
 
 option(BUILD_FOR_TEST "Build for test" OFF)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include_directories("include/")
 
